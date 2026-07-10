@@ -13,8 +13,13 @@ const VendorList = () => {
     const navigate = useNavigate();
 
     const [vendors, setVendors] = useState([]);
+    const [filteredVendors, setFilteredVendors] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(true);
+    const [statusFilter, setStatusFilter] = useState("All");
+    const [serviceFilter, setServiceFilter] = useState("All");
 
+    // Fetch Vendors
     const fetchVendors = async () => {
         try {
             setLoading(true);
@@ -22,6 +27,7 @@ const VendorList = () => {
             const data = await getVendors();
 
             setVendors(data.vendors || []);
+            setFilteredVendors(data.vendors || []);
         } catch (error) {
             console.error("Failed to fetch vendors", error);
         } finally {
@@ -29,9 +35,51 @@ const VendorList = () => {
         }
     };
 
+    // Initial Load
     useEffect(() => {
         fetchVendors();
     }, []);
+
+    // Live Search
+    useEffect(() => {
+        let filtered = [...vendors];
+
+        // Search
+        if (searchTerm.trim()) {
+            const search = searchTerm.toLowerCase();
+
+            filtered = filtered.filter((vendor) => {
+                return (
+                    vendor.companyName?.toLowerCase().includes(search) ||
+                    vendor.vendorCode?.toLowerCase().includes(search) ||
+                    vendor.contactPerson?.toLowerCase().includes(search) ||
+                    vendor.email?.toLowerCase().includes(search)
+                );
+            });
+        }
+
+        // Status Filter
+        if (statusFilter !== "All") {
+            filtered = filtered.filter(
+                (vendor) => vendor.status === statusFilter
+            );
+        }
+
+        // Service Filter
+        if (serviceFilter !== "All") {
+            filtered = filtered.filter(
+                (vendor) => vendor.serviceType === serviceFilter
+            );
+        }
+
+        setFilteredVendors(filtered);
+
+    }, [
+        vendors,
+        searchTerm,
+        statusFilter,
+        serviceFilter,
+    ]);
 
     return (
         <div className="space-y-6">
@@ -60,17 +108,25 @@ const VendorList = () => {
             </div>
 
             {/* Statistics */}
-            <VendorStats vendors={vendors} />
+            <VendorStats vendors={filteredVendors} />
 
             {/* Search */}
-            <VendorSearch />
+            <VendorSearch
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+            />
 
             {/* Filters */}
-            <VendorFilters />
+            <VendorFilters
+                statusFilter={statusFilter}
+                setStatusFilter={setStatusFilter}
+                serviceFilter={serviceFilter}
+                setServiceFilter={setServiceFilter}
+            />
 
             {/* Vendor Table */}
             <VendorTable
-                vendors={vendors}
+                vendors={filteredVendors}
                 loading={loading}
             />
 

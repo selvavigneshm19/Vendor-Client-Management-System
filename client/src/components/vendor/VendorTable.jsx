@@ -3,12 +3,43 @@ import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import DeleteVendorModal from "./DeleteVendorModal";
+import { deleteVendor } from "../../services/vendorService";
 
 const VendorTable = ({ vendors, loading }) => {
   const navigate = useNavigate();
 
   const [openDelete, setOpenDelete] = useState(false);
   const [selectedVendor, setSelectedVendor] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  // Delete Vendor
+  const handleDelete = async () => {
+    if (!selectedVendor) return;
+
+    try {
+      setDeleteLoading(true);
+
+      await deleteVendor(selectedVendor._id);
+
+      alert("Vendor deleted successfully");
+
+      setOpenDelete(false);
+      setSelectedVendor(null);
+
+      // Refresh vendor list
+      window.location.reload();
+
+    } catch (error) {
+      console.error(error);
+
+      alert(
+        error.response?.data?.message ||
+        "Failed to delete vendor"
+      );
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -151,19 +182,12 @@ const VendorTable = ({ vendors, loading }) => {
 
       <DeleteVendorModal
         open={openDelete}
-        loading={false}
+        loading={deleteLoading}
         onClose={() => {
           setOpenDelete(false);
           setSelectedVendor(null);
         }}
-        onDelete={() => {
-          console.log("Delete Vendor:", selectedVendor);
-
-          // Backend integration will be added later
-
-          setOpenDelete(false);
-          setSelectedVendor(null);
-        }}
+        onDelete={handleDelete}
       />
     </>
   );
