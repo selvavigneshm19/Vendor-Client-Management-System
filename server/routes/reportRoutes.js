@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  getDashboardReport, getEmployeeReport,getProjectReport,getPayrollReport, getAttendanceReport,
+  getDashboardReport, getEmployeeReport,getProjectReport,getPayrollReport, getAttendanceReport,getLeaveReport,getTaskReport
 } = require("../controllers/reportController");
 
 const {
@@ -44,5 +44,20 @@ router.get(
   protect,
   authorize("superadmin", "admin"),
   getAttendanceReport
+);
+// Leave Report
+router.get(
+    "/leaves",
+    protect,
+    authorize("superadmin", "admin"),
+    getLeaveReport
+);
+
+// Task Report
+router.get(
+    "/tasks",
+    protect,
+    authorize("superadmin", "admin"),
+    getTaskReport
 );
 module.exports = router;

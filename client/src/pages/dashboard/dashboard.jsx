@@ -1,52 +1,29 @@
-import WelcomeBanner from "../../components/dashboard/WelcomeBanner";
-import StatisticsCards from "../../components/dashboard/StatisticsCards";
-import RevenueChart from "../../components/dashboard/RevenueChart";
-import ClientGrowthChart from "../../components/dashboard/ClientGrowthChart";
-import RecentVendors from "../../components/dashboard/RecentVendors";
-import RecentClients from "../../components/dashboard/RecentClients";
-import PendingTasks from "../../components/dashboard/PendingTasks";
-import NotificationsCard from "../../components/dashboard/NotificationsCard";
-import QuickActions from "../../components/dashboard/QuickActions";
+import useAuth from "../../hooks/useAuth";
+
+import AdminDashboard from "./AdminDashboard";
+import SuperAdminDashboard from "./SuperAdminDashboard";
+import VendorDashboard from "./VendorDashboard";
 
 const Dashboard = () => {
-  return (
-    <div className="space-y-6">
+  const { user } = useAuth();
 
-      <WelcomeBanner />
+  switch (user?.role) {
+    case "superadmin":
+      return <SuperAdminDashboard />;
 
-      <StatisticsCards />
+    case "admin":
+      return <AdminDashboard />;
 
-      {/* Charts */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+    case "vendor":
+      return <VendorDashboard />;
 
-        <RevenueChart />
-
-        <ClientGrowthChart />
-
-      </div>
-
-      {/* Tables */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-
-        <RecentVendors />
-
-        <RecentClients />
-
-      </div>
-
-      {/* Bottom */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-        <PendingTasks />
-
-        <NotificationsCard />
-
-        <QuickActions />
-
-      </div>
-
-    </div>
-  );
+    default:
+      return (
+        <div className="text-white text-center py-20">
+          Unauthorized
+        </div>
+      );
+  }
 };
 
 export default Dashboard;

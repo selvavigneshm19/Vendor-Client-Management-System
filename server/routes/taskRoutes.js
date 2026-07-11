@@ -2,7 +2,13 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  createTask,getTasks,getTaskById, updateTask,deleteTask,
+  createTask,
+  getTasks,
+  getTaskById,
+  updateTask,
+  deleteTask,
+  startTask,
+  completeTask
 } = require("../controllers/taskController");
 
 const {
@@ -44,5 +50,20 @@ router.delete(
   protect,
   authorize("superadmin", "admin"),
   deleteTask
+);
+// Start Task
+router.put(
+  "/:id/start",
+  protect,
+  authorize("superadmin", "admin"),
+  startTask
+);
+
+// Complete Task
+router.put(
+  "/:id/complete",
+  protect,
+  authorize("superadmin", "admin"),
+  completeTask
 );
 module.exports = router;

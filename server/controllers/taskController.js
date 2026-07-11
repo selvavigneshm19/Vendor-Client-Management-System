@@ -316,10 +316,86 @@ const deleteTask = async (req, res) => {
     });
   }
 };
+// ========================================
+// Start Task
+// ========================================
+
+const startTask = async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: "Task not found",
+      });
+    }
+
+    task.status = "In Progress";
+    task.startedAt = new Date();
+
+    await task.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Task started successfully",
+      task,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+// ========================================
+// Complete Task
+// ========================================
+
+const completeTask = async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: "Task not found",
+      });
+    }
+
+    task.completedAt = new Date();
+    task.status = "Completed";
+
+    if (task.startedAt) {
+      const hours =
+        (task.completedAt - task.startedAt) /
+        (1000 * 60 * 60);
+
+      task.actualHours = Number(hours.toFixed(2));
+    }
+
+    await task.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Task completed successfully",
+      task,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 module.exports = {
   createTask,
   getTasks,
   getTaskById,
   updateTask,
   deleteTask,
+  startTask,
+  completeTask
 };

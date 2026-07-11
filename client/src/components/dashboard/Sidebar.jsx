@@ -1,26 +1,40 @@
 import {
-  LayoutDashboard,
-  Building2,
-  Users,
-  FolderKanban,
-  UserCog,
-  CalendarCheck,
-  CalendarDays,
-  Wallet,
-  CheckSquare,
   BarChart3,
   Bell,
-  Settings,
+  Building2,
+  CalendarCheck,
+  CalendarDays,
+  CheckSquare,
+  FolderKanban,
+  LayoutDashboard,
   LogOut,
+  Settings,
+  Shield,
+  UserCog,
+  Users
 } from "lucide-react";
 
+import { useNavigate } from "react-router-dom";
+
+import useAuth from "../../hooks/useAuth";
 import SidebarItem from "./SidebarItem";
 
 const Sidebar = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const role = user?.role;
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
+
   return (
     <aside className="w-72 bg-slate-950 border-r border-slate-800 h-screen flex flex-col">
 
-      {/* Logo */}
+      {/* ================= Logo ================= */}
+
       <div className="p-6 border-b border-slate-800">
 
         <h1 className="text-3xl font-bold text-violet-500">
@@ -33,8 +47,11 @@ const Sidebar = () => {
 
       </div>
 
-      {/* Menu */}
+      {/* ================= Menu ================= */}
+
       <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+
+        {/* Dashboard - Everyone */}
 
         <SidebarItem
           icon={LayoutDashboard}
@@ -42,78 +59,125 @@ const Sidebar = () => {
           to="/dashboard"
         />
 
-        <SidebarItem
-          icon={Building2}
-          title="Vendors"
-          to="/dashboard/vendors"
-        />
+        {/* ================= SUPER ADMIN ================= */}
 
-        <SidebarItem
-          icon={Users}
-          title="Clients"
-          to="/dashboard/clients"
-        />
+        {role === "superadmin" && (
+          <>
+            <SidebarItem
+              icon={Shield}
+              title="Admins"
+              to="/dashboard/admins"
+            />
 
-        <SidebarItem
-          icon={FolderKanban}
-          title="Projects"
-          to="/dashboard/projects"
-        />
+            <SidebarItem
+              icon={Building2}
+              title="Vendors"
+              to="/dashboard/vendors"
+            />
 
-        <SidebarItem
-          icon={UserCog}
-          title="Employees"
-          to="/dashboard/employees"
-        />
+            <SidebarItem
+              icon={Bell}
+              title="Notifications"
+              to="/dashboard/notifications"
+            />
 
-        <SidebarItem
-          icon={CalendarCheck}
-          title="Attendance"
-          to="/dashboard/attendance"
-        />
+            <SidebarItem
+              icon={Settings}
+              title="Settings"
+              to="/dashboard/settings"
+            />
+          </>
+        )}
 
-        <SidebarItem
-          icon={CalendarDays}
-          title="Leave"
-          to="/dashboard/leave"
-        />
+        {/* ================= ADMIN ================= */}
 
-        <SidebarItem
-          icon={Wallet}
-          title="Payroll"
-          to="/dashboard/payroll"
-        />
+        {role === "admin" && (
+          <>
+            <SidebarItem
+              icon={Building2}
+              title="Vendors"
+              to="/dashboard/vendors"
+            />
 
-        <SidebarItem
-          icon={CheckSquare}
-          title="Tasks"
-          to="/dashboard/tasks"
-        />
+            <SidebarItem
+              icon={Bell}
+              title="Notifications"
+              to="/dashboard/notifications"
+            />
+          </>
+        )}
 
-        <SidebarItem
-          icon={BarChart3}
-          title="Reports"
-          to="/dashboard/reports"
-        />
+        {/* ================= VENDOR ================= */}
 
-        <SidebarItem
-          icon={Bell}
-          title="Notifications"
-          to="/dashboard/notifications"
-        />
+        {role === "vendor" && (
+          <>
+            <SidebarItem
+              icon={Users}
+              title="Clients"
+              to="/dashboard/clients"
+            />
 
-        <SidebarItem
-          icon={Settings}
-          title="Settings"
-          to="/dashboard/settings"
-        />
+            <SidebarItem
+              icon={FolderKanban}
+              title="Projects"
+              to="/dashboard/projects"
+            />
+
+            <SidebarItem
+              icon={UserCog}
+              title="Employees"
+              to="/dashboard/employees"
+            />
+
+            <SidebarItem
+              icon={CalendarCheck}
+              title="Attendance"
+              to="/dashboard/attendance"
+            />
+
+            <SidebarItem
+              icon={CalendarDays}
+              title="Leave"
+              to="/dashboard/leave"
+            />
+
+            <SidebarItem
+              icon={CheckSquare}
+              title="Tasks"
+              to="/dashboard/tasks"
+            />
+
+            <SidebarItem
+              icon={Bell}
+              title="Notifications"
+              to="/dashboard/notifications"
+            />
+          </>
+        )}
+
+        {/* ================= OPTIONAL ================= */}
+        {/* Enable this only if Vendors/Admins should see Reports */}
+
+        {(role === "superadmin" ||
+          role === "admin" ||
+          role === "vendor") && (
+            <SidebarItem
+              icon={BarChart3}
+              title="Reports"
+              to="/dashboard/reports"
+            />
+          )}
 
       </nav>
 
-      {/* Logout */}
+      {/* ================= Logout ================= */}
+
       <div className="p-4 border-t border-slate-800">
 
-        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:bg-red-500 hover:text-white transition">
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:bg-red-500 hover:text-white transition"
+        >
           <LogOut size={20} />
           Logout
         </button>

@@ -14,10 +14,10 @@ const createAttendance = async (req, res) => {
       attendanceDate,
       checkIn,
       checkOut,
-      workingHours,
       status,
       remarks,
     } = req.body;
+    let { workingHours } = req.body;
 
     // Required Fields Validation
     if (!employee || !attendanceDate) {
@@ -25,6 +25,17 @@ const createAttendance = async (req, res) => {
         success: false,
         message: "Employee and Attendance Date are required",
       });
+    }
+    if (checkIn && checkOut) {
+      const start = new Date(`1970-01-01T${checkIn}`);
+      const end = new Date(`1970-01-01T${checkOut}`);
+
+      workingHours = (end - start) / (1000 * 60 * 60);
+
+      if (workingHours < 0) {
+        workingHours = 0;
+      }
+      workingHours = Number(workingHours.toFixed(2));
     }
 
     // Check Employee Exists

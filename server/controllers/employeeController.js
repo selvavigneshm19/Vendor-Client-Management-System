@@ -1,6 +1,6 @@
 const Employee = require("../models/Employee");
 const Project = require("../models/Project");
-
+const sendNotification = require("../utils/createNotification");
 // =======================================
 // Create Employee
 // =======================================
@@ -38,7 +38,9 @@ const createEmployee = async (req, res) => {
       notes,
     } = req.body;
 
+    // =======================================
     // Required Fields
+    // =======================================
     if (
       !employeeName ||
       !employeeCode ||
@@ -60,8 +62,12 @@ const createEmployee = async (req, res) => {
       });
     }
 
+    // =======================================
     // Employee Code Exists
-    const employeeCodeExists = await Employee.findOne({ employeeCode });
+    // =======================================
+    const employeeCodeExists = await Employee.findOne({
+      employeeCode,
+    });
 
     if (employeeCodeExists) {
       return res.status(400).json({
@@ -70,8 +76,12 @@ const createEmployee = async (req, res) => {
       });
     }
 
+    // =======================================
     // Email Exists
-    const emailExists = await Employee.findOne({ email });
+    // =======================================
+    const emailExists = await Employee.findOne({
+      email,
+    });
 
     if (emailExists) {
       return res.status(400).json({
@@ -80,7 +90,9 @@ const createEmployee = async (req, res) => {
       });
     }
 
+    // =======================================
     // Project Exists
+    // =======================================
     const projectExists = await Project.findById(project);
 
     if (!projectExists) {
@@ -90,6 +102,9 @@ const createEmployee = async (req, res) => {
       });
     }
 
+    // =======================================
+    // Create Employee
+    // =======================================
     const employee = await Employee.create({
       employeeName,
       employeeCode,
@@ -119,10 +134,27 @@ const createEmployee = async (req, res) => {
       createdBy: req.user._id,
     });
 
+    // =======================================
+    // Create Notification
+    // =======================================
+    await sendNotification({
+      title: "Employee Added",
+      message: `${employee.employeeName} has been added successfully.`,
+      type: "Success",
+      recipient: req.user._id,
+      createdBy: req.user._id,
+    });
+
+    // =======================================
+    // Populate Employee
+    // =======================================
     const populatedEmployee = await Employee.findById(employee._id)
       .populate("project", "projectName projectCode")
       .populate("createdBy", "name email role");
 
+    // =======================================
+    // Response
+    // =======================================
     res.status(201).json({
       success: true,
       message: "Employee created successfully",

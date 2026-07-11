@@ -67,6 +67,18 @@ const taskSchema = new mongoose.Schema(
       default: 0,
     },
 
+    startedAt: {
+      type: Date,
+      default: null,
+    },
+
+    completedAt: {
+      type: Date,
+      default: null,
+    },
+
+
+
     remarks: {
       type: String,
       default: "",

@@ -175,10 +175,96 @@ const getAttendanceReport = async (req, res) => {
     });
   }
 };
+const Leave = require("../models/Leave");
+// ======================================
+// Leave Report
+// ======================================
+
+const getLeaveReport = async (req, res) => {
+    try {
+
+        console.log("========== LEAVE REPORT ==========");
+
+        const leaves = await Leave.find()
+            .populate(
+                "employee",
+                "employeeName employeeCode department designation"
+            )
+            .populate(
+                "createdBy",
+                "name email role"
+            )
+            .sort({ createdAt: -1 });
+
+        res.status(200).json({
+            success: true,
+            count: leaves.length,
+            report: leaves,
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+
+    }
+};
+
+const Task = require("../models/Task");
+// ======================================
+// Task Report
+// ======================================
+
+const getTaskReport = async (req, res) => {
+
+    try {
+
+        console.log("========== TASK REPORT ==========");
+
+        const tasks = await Task.find()
+            .populate(
+                "employee",
+                "employeeName employeeCode department designation"
+            )
+            .populate(
+                "project",
+                "projectName projectCode"
+            )
+            .populate(
+                "createdBy",
+                "name email role"
+            )
+            .sort({ createdAt: -1 });
+
+        res.status(200).json({
+            success: true,
+            count: tasks.length,
+            report: tasks,
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+
+    }
+
+};
+
 module.exports = {
   getDashboardReport,
   getEmployeeReport,
   getProjectReport,
   getPayrollReport,
    getAttendanceReport,
+   getLeaveReport,
+    getTaskReport,
 };

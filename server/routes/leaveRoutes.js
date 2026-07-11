@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const { createLeave, getLeaves, getLeaveById, updateLeave,deleteLeave,
- } = require("../controllers/leaveController");
+const { createLeave, getLeaves, getLeaveById, updateLeave, deleteLeave,
+} = require("../controllers/leaveController");
 
 const {
   protect,

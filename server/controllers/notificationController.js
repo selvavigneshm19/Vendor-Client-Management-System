@@ -68,7 +68,6 @@ const getNotifications = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("========== GET ALL NOTIFICATIONS ERROR ==========");
     console.error(error);
 
     res.status(500).json({
@@ -77,13 +76,13 @@ const getNotifications = async (req, res) => {
     });
   }
 };
+
 // ======================================
 // Get My Notifications
 // ======================================
 const getMyNotifications = async (req, res) => {
   try {
     console.log("========== GET MY NOTIFICATIONS ==========");
-    console.log("User:", req.user._id);
 
     const notifications = await Notification.find({
       recipient: req.user._id,
@@ -98,7 +97,6 @@ const getMyNotifications = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("========== GET MY NOTIFICATIONS ERROR ==========");
     console.error(error);
 
     res.status(500).json({
@@ -114,7 +112,6 @@ const getMyNotifications = async (req, res) => {
 const markNotificationAsRead = async (req, res) => {
   try {
     console.log("========== MARK NOTIFICATION AS READ ==========");
-    console.log("Notification ID:", req.params.id);
 
     const notification = await Notification.findById(req.params.id);
 
@@ -140,7 +137,6 @@ const markNotificationAsRead = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("========== MARK NOTIFICATION ERROR ==========");
     console.error(error);
 
     res.status(500).json({
@@ -155,8 +151,6 @@ const markNotificationAsRead = async (req, res) => {
 // ======================================
 const getUnreadNotificationCount = async (req, res) => {
   try {
-    console.log("========== GET UNREAD NOTIFICATION COUNT ==========");
-    console.log("User:", req.user._id);
 
     const unreadCount = await Notification.countDocuments({
       recipient: req.user._id,
@@ -169,7 +163,6 @@ const getUnreadNotificationCount = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("========== GET UNREAD COUNT ERROR ==========");
     console.error(error);
 
     res.status(500).json({
@@ -178,13 +171,12 @@ const getUnreadNotificationCount = async (req, res) => {
     });
   }
 };
+
 // ======================================
 // Delete Notification
 // ======================================
 const deleteNotification = async (req, res) => {
   try {
-    console.log("========== DELETE NOTIFICATION ==========");
-    console.log("Notification ID:", req.params.id);
 
     const notification = await Notification.findById(req.params.id);
 
@@ -203,7 +195,6 @@ const deleteNotification = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("========== DELETE NOTIFICATION ERROR ==========");
     console.error(error);
 
     res.status(500).json({
@@ -212,6 +203,7 @@ const deleteNotification = async (req, res) => {
     });
   }
 };
+
 module.exports = {
   createNotification,
   getNotifications,
