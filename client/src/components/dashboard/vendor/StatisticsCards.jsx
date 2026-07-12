@@ -1,5 +1,5 @@
-import TotalVendors from "./TotalVendors";
 import TotalClients from "./TotalClients";
+import TotalVendors from "./TotalVendors";
 
 const StatisticsCards = () => {
   return (

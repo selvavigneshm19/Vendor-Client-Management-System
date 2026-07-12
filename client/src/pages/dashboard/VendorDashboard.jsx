@@ -1,9 +1,8 @@
+import RecentClients from "../../components/dashboard/RecentClients";
 import WelcomeBanner from "../../components/dashboard/WelcomeBanner";
-
-import QuickActions from "../../components/dashboard/QuickActions";
 import NotificationsCard from "../../components/dashboard/vendor/NotificationsCard";
 import PendingTasks from "../../components/dashboard/vendor/PendingTasks";
-import RecentClients from "../../components/dashboard/vendor/RecentClients";
+import QuickActions from "../../components/dashboard/vendor/QuickActions";
 import VendorStatisticsCards from "../../components/dashboard/vendor/StatisticsCards";
 
 const VendorDashboard = () => {

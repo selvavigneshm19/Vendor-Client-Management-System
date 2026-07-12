@@ -1,11 +1,11 @@
 import ClientGrowthChart from "../../components/dashboard/ClientGrowthChart";
-import NotificationsCard from "../../components/dashboard/NotificationsCard";
-import PendingTasks from "../../components/dashboard/PendingTasks";
-import QuickActions from "../../components/dashboard/QuickActions";
 import RecentClients from "../../components/dashboard/RecentClients";
-import RecentVendors from "../../components/dashboard/RecentVendors";
 import RevenueChart from "../../components/dashboard/RevenueChart";
-import StatisticsCards from "../../components/dashboard/StatisticsCards";
+import NotificationsCard from "../../components/dashboard/vendor/NotificationsCard";
+import PendingTasks from "../../components/dashboard/vendor/PendingTasks";
+import QuickActions from "../../components/dashboard/vendor/QuickActions";
+import RecentVendors from "../../components/dashboard/vendor/RecentVendors";
+import StatisticsCards from "../../components/dashboard/vendor/StatisticsCards";
 import WelcomeBanner from "../../components/dashboard/WelcomeBanner";
 
 const SuperAdminDashboard = () => {
